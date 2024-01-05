@@ -1,22 +1,15 @@
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { getUser } from "@/store/auth/authActions";
+import React from 'react';
 
 // Styles
-import { useMediaQuery } from "@mui/material";
-import { PageContainer } from "../UI";
+import { useMediaQuery } from '@mui/material';
+import { PageContainer } from '../UI';
 
 // Snackbar
-import { SnackbarProvider } from "notistack";
-import { StyledMaterialDesignContent } from "../UI";
+import { SnackbarProvider } from 'notistack';
+import { StyledMaterialDesignContent } from '../UI';
 
 const Layout = ({ children }) => {
-  const dispatch = useDispatch();
-  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
-
-  useEffect(() => {
-    dispatch(getUser());
-  }, [dispatch]);
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
   return (
     <React.Fragment>
@@ -28,8 +21,8 @@ const Layout = ({ children }) => {
           error: StyledMaterialDesignContent,
         }}
         anchorOrigin={{
-          vertical: "top",
-          horizontal: isMobile ? "center" : "center",
+          vertical: 'top',
+          horizontal: isMobile ? 'center' : 'center',
         }}
       >
         <PageContainer>{children}</PageContainer>

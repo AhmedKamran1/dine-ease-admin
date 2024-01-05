@@ -12,6 +12,6 @@ export const ModalContent = styled(Box)(({ theme }) => ({
 
 export const ModalCancelIcon = styled(IconButton)(({ theme }) => ({
   position: 'absolute',
-  top: '10px',
-  right: '10px',
+  top: '5px',
+  right: '5px',
 }));

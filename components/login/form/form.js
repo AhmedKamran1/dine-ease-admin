@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
-import Link from "next/link";
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-import ResendModal from "../resend-verification/resend-modal";
+import ResendModal from '../resend-verification/resend-modal';
 
 // Services
-import { login } from "@/services";
+import { login } from '@/services';
 
 // Form
-import { useFormik } from "formik";
-import { loginSchema } from "@/utils/validation-schema/login";
+import { useFormik } from 'formik';
+import { loginSchema } from '@/utils/validation-schema/login';
 
 // Snackbar
-import { enqueueSnackbar } from "notistack";
-import { getError } from "@/helpers/snackbarHelpers";
+import { enqueueSnackbar } from 'notistack';
+import { getError } from '@/helpers/snackbarHelpers';
 
 // Icons
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 // Styles
 import {
@@ -26,7 +26,7 @@ import {
   FormGroup,
   IconButton,
   InputAdornment,
-} from "@mui/material";
+} from '@mui/material';
 import {
   Text,
   FormButton,
@@ -34,7 +34,8 @@ import {
   FlexContainer,
   FormContainer,
   CustomCheckbox,
-} from "@/components/UI";
+} from '@/components/UI';
+import RejectModal from '@/components/modal/rejection-modal/rejection-modal';
 
 const LoginForm = () => {
   const router = useRouter();
@@ -54,13 +55,13 @@ const LoginForm = () => {
       formik.setSubmitting(true);
       const res = await login(values);
       console.log(res.data);
-      router.push("/", null, { shallow: true });
+      router.push('/', null, { shallow: true });
     } catch (e) {
       console.log(e);
       if (e.request?.status === 403) {
         handleShowModal();
       } else {
-        enqueueSnackbar({ variant: "error", message: getError(e) });
+        enqueueSnackbar({ variant: 'error', message: getError(e) });
       }
     } finally {
       formik.setSubmitting(false);
@@ -69,8 +70,8 @@ const LoginForm = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
     validationSchema: loginSchema,
     onSubmit: submitHandler,
@@ -84,16 +85,15 @@ const LoginForm = () => {
         email={formik.values.email}
       />
       <FormContainer component="form" onSubmit={formik.handleSubmit}>
-        <Text variant="header" textAlign={"center"} fontWeight={800}>
+        <Text variant="header" textAlign={'center'} fontWeight={800}>
           Welcome to&nbsp;
           <Text variant="header" color="primary">
             DineEase
           </Text>
         </Text>
-        <Text variant="main" textAlign={"center"} fontWeight={500} mb={3}>
+        <Text variant="main" textAlign={'center'} fontWeight={500} mb={3}>
           Login to your account
         </Text>
-
         <InputField
           name="email"
           label="Email"
@@ -111,7 +111,7 @@ const LoginForm = () => {
           label="Password"
           variant="outlined"
           placeholder="Enter Password"
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? 'text' : 'password'}
           value={formik.values.password}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -120,25 +120,18 @@ const LoginForm = () => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  edge="end"
-                >
+                <IconButton onClick={() => setShowPassword((prev) => !prev)} edge="end">
                   {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                 </IconButton>
               </InputAdornment>
             ),
           }}
         />
-
-        <FlexContainer sx={{ justifyContent: "space-between" }}>
+        <FlexContainer sx={{ justifyContent: 'space-between' }}>
           <FormGroup>
             <FormControlLabel
               control={
-                <CustomCheckbox
-                  checked={remember}
-                  onChange={rememberChangeHandler}
-                />
+                <CustomCheckbox checked={remember} onChange={rememberChangeHandler} />
               }
               label="Remember me"
             />
@@ -147,7 +140,6 @@ const LoginForm = () => {
             <Text variant="body">Forgot Password?</Text>
           </Link>
         </FlexContainer>
-
         <FormButton type="submit" disabled={formik.isSubmitting}>
           <Text variant="sub">Login</Text>
         </FormButton>

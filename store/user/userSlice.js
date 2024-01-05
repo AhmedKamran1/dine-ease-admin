@@ -1,22 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
-import { getUser } from './authActions';
+import { getUser } from './userActions';
 
 const initialState = {
-  user: {
-    id: null,
-    name: null,
-    email: null,
-    role: null,
-    avatar: null,
-  },
+  id: null,
+  name: null,
+  email: null,
 };
-
-const authSlice = createSlice({
-  name: 'auth',
+const userSlice = createSlice({
+  name: 'user',
   initialState,
   reducers: {
     logout: () => initialState,
+    login: (state, action) => (state = action.payload),
   },
   extraReducers: (builder) => {
     builder
@@ -27,15 +23,15 @@ const authSlice = createSlice({
         };
       })
       .addCase(getUser.rejected, (state, action) => {
-        state.user = initialState;
+        return initialState;
       })
       .addCase(getUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        return action.payload;
       });
   },
 });
 
-export const selectUserState = (state) => state.auth.user;
+export const selectUserState = (state) => state.user;
 
-export const authActions = authSlice.actions;
-export default authSlice;
+export const userActions = userSlice.actions;
+export default userSlice;
