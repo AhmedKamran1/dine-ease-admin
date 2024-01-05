@@ -1,11 +1,11 @@
 import React from "react";
 
-//Styles
+// Styles
 import { Button, Modal } from "@mui/material";
 import * as Styles from "./confirmation-modal.styles";
 import { FlexContainer, Text } from "@/components/UI";
 
-//Icons
+// Icons
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const ConfirmModal = ({ showModal, handleCloseModal, handleConfirm }) => {
