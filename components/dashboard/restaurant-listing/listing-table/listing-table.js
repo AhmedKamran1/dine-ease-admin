@@ -1,32 +1,56 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
+// Styles
+import * as Styles from './listing-table.styles';
+import { DashboardContent, FlexContainer, InputField, Text } from '@/components/UI';
+import { IconButton, InputAdornment, Tooltip } from '@mui/material';
+
+// Icons
+import Search from '@mui/icons-material/Search';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import BadgeIcon from '@mui/icons-material/Badge';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
+import CallIcon from '@mui/icons-material/Call';
+
+// Component
 import DataTable from 'react-data-table-component';
+import Cards from '../card/card';
+import ConfirmModal from '@/components/modal/confirmation-modal/confirmation-modal';
+import RejectModal from '@/components/modal/rejection-modal/rejection-modal';
 
-//Styles
-import { DashboardContent, FlexContainer, InputField } from '@/components/UI';
-import { InputAdornment } from '@mui/material';
+// Snackbar
+import { enqueueSnackbar } from 'notistack';
 
-//Icons
-import PersonIcon from '@mui/icons-material/Person';
-import StarIcon from '@mui/icons-material/Star';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import { Search } from '@mui/icons-material';
+// Helpers
+import { getError } from '@/helpers/snackbarHelpers';
 
-import { featuredDetails } from '@/mockData/mockData';
+// Services
+import { restaurantStatusUpdate } from '@/services';
 
-const ListingTable = () => {
+const tabSelection = ['Pending', 'Approved', 'Rejected'];
+
+const ListingTable = ({
+  pendingRestaurants,
+  approvedRestaurants,
+  allRestaurants,
+  loading,
+  refetchData,
+}) => {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-
+  const [tab, setTab] = useState('Pending');
   const [filterText, setFilterText] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [restaurantId, setRestaurantId] = useState(null);
 
-  const filteredReviews = data.filter(
+  const filteredData = data?.filter(
     (item) =>
-      item.createdAt.toLowerCase().includes(filterText.toLowerCase()) ||
-      item.expiresAt.toLowerCase().includes(filterText.toLowerCase()) ||
-      item.currentStatus.toLowerCase().includes(filterText.toLowerCase()) ||
-      item.stripeId.toString().includes(filterText) ||
-      item.amount.toString().includes(filterText)
+      item.name.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.id.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.taxId.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.phoneNumber.toString().includes(filterText)
   );
 
   const subHeaderComponentMemo = useMemo(() => {
@@ -54,84 +78,178 @@ const ListingTable = () => {
     {
       name: (
         <FlexContainer gap={0.5}>
-          <PersonIcon color="primary" />
-          Payment ID
+          <RestaurantIcon color="primary" />
+          Restaurant Name
         </FlexContainer>
       ),
-      selector: (row) => row.stripeId,
-      sortable: 'true',
-    },
-    {
-      name: (
-        <FlexContainer gap={0.5}>
-          <StarIcon color="primary" />
-          Feature Date
-        </FlexContainer>
-      ),
-      selector: (row) => row.createdAt,
+      selector: (row) => row.name,
       sortable: 'true',
       center: 'true',
     },
     {
       name: (
         <FlexContainer gap={0.5}>
-          <CalendarMonthIcon color="primary" />
-          Expiration Date
+          <BadgeIcon color="primary" />
+          Restaurant ID
         </FlexContainer>
       ),
-      selector: (row) => row.expiresAt,
+      selector: (row) => row.id,
+      sortable: 'true',
+    },
+    {
+      name: (
+        <FlexContainer gap={0.5}>
+          <FactCheckIcon color="primary" />
+          Tax ID
+        </FlexContainer>
+      ),
+      selector: (row) => row.taxId,
       sortable: 'true',
       center: 'true',
     },
     {
       name: (
         <FlexContainer gap={0.5}>
-          <CalendarMonthIcon color="primary" />
-          Amount Spent
+          <CallIcon color="primary" />
+          Contact No.
         </FlexContainer>
       ),
-      selector: (row) => row.amount,
+      selector: (row) => row.phoneNumber,
       center: 'true',
     },
     {
-      name: (
-        <FlexContainer gap={0.5}>
-          <CalendarMonthIcon color="primary" />
-          Status
-        </FlexContainer>
+      selector: (row) => (
+        <React.Fragment>
+          <IconButton onClick={() => handleShowConfirmModal(row.id)}>
+            <Tooltip title="Approve Restaurant" placement="top" arrow>
+              <CheckCircleIcon color="success" />
+            </Tooltip>
+          </IconButton>
+          <IconButton onClick={() => handleShowRejectModal(row.id)}>
+            <Tooltip title="Reject Restaurant" placement="top" arrow>
+              <CancelIcon color="error" />
+            </Tooltip>
+          </IconButton>
+        </React.Fragment>
       ),
-      selector: (row) => row.currentStatus,
       center: 'true',
     },
   ];
 
+  const handleShowConfirmModal = (id) => {
+    setShowConfirmModal((prevState) => !prevState);
+    setRestaurantId(id);
+  };
+
+  const handleShowRejectModal = (id) => {
+    setShowRejectModal((prevState) => !prevState);
+    setRestaurantId(id);
+  };
+
+  const restaurantApproveHandler = async () => {
+    try {
+      const response = await restaurantStatusUpdate(restaurantId, { status: 'approved' });
+      // setData((prevState) => prevState.filter((record) => record.id !== restaurantId));
+      enqueueSnackbar({
+        variant: 'success',
+        message: response.data,
+      });
+    } catch (e) {
+      enqueueSnackbar({ variant: 'error', message: getError(e) });
+    } finally {
+      refetchData();
+    }
+  };
+
+  const restaurantRejectHandler = async (remarks) => {
+    try {
+      const response = await restaurantStatusUpdate(restaurantId, {
+        status: 'rejected',
+        remarks: remarks,
+      });
+      // setData((prevState) => prevState.filter((record) => record.id !== restaurantId));
+      enqueueSnackbar({
+        variant: 'success',
+        message: response.data,
+      });
+    } catch (e) {
+      enqueueSnackbar({ variant: 'error', message: getError(e) });
+    } finally {
+      refetchData();
+    }
+  };
+
+  const listingHandler = (tab) => {
+    switch (tab) {
+      case 'Pending':
+        setData(pendingRestaurants.data);
+        break;
+      case 'Approved':
+        setData(approvedRestaurants.data.restaurants);
+        break;
+      case 'Rejected':
+        setData(allRestaurants.data);
+        break;
+      default:
+        setData(allRestaurants.data);
+    }
+  };
+
   useEffect(() => {
-    setLoading(true);
-    const data = featuredDetails.map((review) => ({
-      stripeId: review.stripeId,
-      createdAt: review.createdAt,
-      expiresAt: review.expiresAt,
-      amount: review.amount,
-      currentStatus: review.currentStatus,
-    }));
-    setData(data);
-    setLoading(false);
-  }, []);
+    if (!loading) listingHandler(tab);
+  }, [tab, loading, approvedRestaurants, pendingRestaurants]);
 
   return (
-    <DashboardContent>
-      <DataTable
-        columns={columns}
-        data={filteredReviews}
-        responsive
-        subHeader
-        subHeaderComponent={subHeaderComponentMemo}
-        pagination
-        paginationPerPage={8}
-        paginationRowsPerPageOptions={[8]}
-        progressPending={loading}
-      />
-    </DashboardContent>
+    <React.Fragment>
+      {showConfirmModal && (
+        <ConfirmModal
+          showModal={showConfirmModal}
+          handleCloseModal={handleShowConfirmModal}
+          handleConfirm={restaurantApproveHandler}
+        />
+      )}
+      {showRejectModal && (
+        <RejectModal
+          showModal={showRejectModal}
+          handleCloseModal={handleShowRejectModal}
+          handleReject={restaurantRejectHandler}
+        />
+      )}
+      <DashboardContent>
+        <Text variant="subHeader" fontWeight={500}>
+          Restaurant Listings
+        </Text>
+        <Styles.OptionContainer>
+          {tabSelection.map((option) => (
+            <Styles.Option
+              key={option}
+              selected={+option.includes(tab)}
+              onClick={() => setTab(option)}
+            >
+              <Text variant="body" fontWeight={500}>
+                {option}
+              </Text>
+            </Styles.Option>
+          ))}
+        </Styles.OptionContainer>
+        <Cards
+          pendingCount={pendingRestaurants?.data?.length}
+          approvedCount={approvedRestaurants?.data?.restaurants.length}
+          totalCount={allRestaurants?.data?.length}
+        />
+        <DataTable
+          columns={tab === 'Pending' ? columns : columns.slice(0, -1)}
+          data={filteredData}
+          responsive
+          subHeader
+          subHeaderComponent={subHeaderComponentMemo}
+          pagination
+          paginationPerPage={10}
+          paginationRowsPerPageOptions={[5, 10, 15]}
+          progressPending={loading}
+        />
+      </DashboardContent>
+    </React.Fragment>
   );
 };
 
