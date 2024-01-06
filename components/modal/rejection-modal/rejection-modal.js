@@ -3,8 +3,8 @@ import { useFormik } from 'formik';
 
 // Styles
 import * as Styles from './rejection-modal.styles';
-import { Modal } from '@mui/material';
-import { InputField, ModalCancelIcon, PrimaryButton, Text } from '@/components/UI';
+import { Button, Modal } from '@mui/material';
+import { InputField, ModalCancelIcon, Text } from '@/components/UI';
 
 // Utils
 import { rejectionSchema } from '@/utils/validation-schema/rejection';
@@ -15,8 +15,9 @@ import CloseIcon from '@mui/icons-material/Close';
 const RejectModal = ({ showModal, handleCloseModal, handleReject }) => {
   const submitHandler = async (values) => {
     formik.setSubmitting(true);
+    handleReject(values.reason);
     formik.setSubmitting(false);
-    handleShowModal();
+    handleCloseModal();
   };
 
   const formik = useFormik({
@@ -29,8 +30,8 @@ const RejectModal = ({ showModal, handleCloseModal, handleReject }) => {
 
   return (
     <Modal open={showModal} onClose={handleCloseModal}>
-      <Styles.ModalContainer>
-        <ModalCancelIcon>
+      <Styles.ModalContainer component="form" onSubmit={formik.handleSubmit}>
+        <ModalCancelIcon onClick={handleCloseModal}>
           <CloseIcon color="secondary" fontSize="medium" />
         </ModalCancelIcon>
         <Text variant="subHeader" fontWeight={500}>
@@ -50,16 +51,16 @@ const RejectModal = ({ showModal, handleCloseModal, handleReject }) => {
           minRows={3}
           maxRows={6}
         />
-        <PrimaryButton
-          onClick={() => {
-            handleReject();
-            handleCloseModal();
-          }}
+        <Button
+          variant="contained"
+          color="error"
+          type="submit"
+          disabled={formik.isSubmitting}
         >
           <Text variant="body" color="text.primary">
             Submit
           </Text>
-        </PrimaryButton>
+        </Button>
       </Styles.ModalContainer>
     </Modal>
   );
