@@ -17,6 +17,7 @@ import ListingTable from './listing-table/listing-table';
 
 // Snackbar
 import { enqueueSnackbar } from 'notistack';
+import { getError } from '@/helpers/snackbarHelpers';
 
 const RestaurantListing = () => {
   const {
@@ -29,7 +30,7 @@ const RestaurantListing = () => {
   const {
     data: approvedRestaurants,
     error: approvedError,
-    isLoading: loadError,
+    isLoading: loadApproved,
     mutate: mutateApproved,
   } = useSWR('/api/approvedRestaurants', getApprovedRestaurants);
 
@@ -39,7 +40,7 @@ const RestaurantListing = () => {
     isLoading: loadAll,
   } = useSWR('/api/allRestaurants', getAllRestaurants);
 
-  const loading = loadPending && loadError && loadAll;
+  const loading = loadPending && loadApproved && loadAll;
 
   if (pendingError || approvedError || allError) {
     enqueueSnackbar({

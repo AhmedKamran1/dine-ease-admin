@@ -1,21 +1,34 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 
-import DataTable from 'react-data-table-component';
+import dayjs from 'dayjs';
 
 // Styles
-import { DashboardContent, FlexContainer, InputField } from '@/components/UI';
-import { InputAdornment } from '@mui/material';
+import * as Styles from './logs-line-chart.styles';
+import { DashboardContent, Text } from '@/components/UI';
+import { Box } from '@mui/material';
 
-// Icons
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import Search from '@mui/icons-material/Search';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import LoopIcon from '@mui/icons-material/Loop';
-import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import BadgeIcon from '@mui/icons-material/Badge';
+// Chart
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 
-// Helpers
-import { getDate } from '@/helpers/dateHelpers';
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const logsData = [
   {
@@ -222,117 +235,122 @@ const logsData = [
     createdAt: '2023-01-04T17:16:59.958+00:00',
   },
 ];
-const LogsTable = () => {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const [filterText, setFilterText] = useState('');
 
-  const filteredReviews = data?.filter(
-    (item) =>
-      item.adminId.toLowerCase().includes(filterText.toLowerCase()) ||
-      item.restaurantId.toLowerCase().includes(filterText.toLowerCase()) ||
-      item.type.toLowerCase().includes(filterText.toLowerCase()) ||
-      item.status.toLowerCase().includes(filterText) ||
-      getDate(item.createdAt).toLowerCase().includes(filterText)
-  );
+const periods = [
+  { id: '30 Days', value: 1 },
+  { id: '3 Months', value: 3 },
+  { id: '6 Months', value: 6 },
+  { id: '1 Year', value: 12 },
+];
 
-  useEffect(() => {
-    setLoading(true);
-    setData(logsData);
-    setLoading(false);
-  }, []);
+const LogsLineChart = () => {
+  const [selectedPeriod, setSelectedPeriod] = useState(1);
 
-  const subHeaderComponentMemo = useMemo(() => {
-    return (
-      <InputField
-        name="search"
-        label="Search"
-        variant="outlined"
-        placeholder="Search Reviews"
-        onChange={(event) => setFilterText(event.target.value)}
-        value={filterText}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <Search />
-            </InputAdornment>
-          ),
-        }}
-        sx={{ maxWidth: '300px' }}
-      />
-    );
-  }, [filterText]);
+  const filterLogsByDateRange = (logs) => {
+    const currentDate = dayjs();
+    const filteredLogs = logs.filter((log) => {
+      const logDate = dayjs(log.createdAt);
+      return logDate.isAfter(currentDate.subtract(selectedPeriod, 'month'));
+    });
+    return filteredLogs;
+  };
 
-  const columns = [
-    {
-      name: (
-        <FlexContainer gap={0.5}>
-          <VerifiedUserIcon color="primary" />
-          Admin ID
-        </FlexContainer>
-      ),
-      selector: (row) => row.adminId,
-      sortable: 'true',
-    },
-    {
-      name: (
-        <FlexContainer gap={0.5}>
-          <BadgeIcon color="primary" />
-          Restaurant ID
-        </FlexContainer>
-      ),
-      selector: (row) => row.restaurantId,
-      sortable: 'true',
-      center: 'true',
-    },
-    {
-      name: (
-        <FlexContainer gap={0.5}>
-          <QuestionAnswerIcon color="primary" />
-          Request Type
-        </FlexContainer>
-      ),
-      selector: (row) => row.type,
-      sortable: 'true',
-      center: 'true',
-    },
-    {
-      name: (
-        <FlexContainer gap={0.5}>
-          <LoopIcon color="primary" />
-          Status
-        </FlexContainer>
-      ),
-      selector: (row) => row.status,
-      center: 'true',
-    },
-    {
-      name: (
-        <FlexContainer gap={0.5}>
-          <CalendarMonthIcon color="primary" />
-          Date
-        </FlexContainer>
-      ),
-      selector: (row) => getDate(row.createdAt),
-      center: 'true',
-    },
-  ];
+  const logs = filterLogsByDateRange(logsData);
 
+  const occurrencesCount = (logs) => {
+    const dayOccurrences = {};
+
+    logs.forEach((log) => {
+      const day = dayjs(log.createdAt).locale('en').format('DD MMMM');
+      const type = log.type;
+
+      if (!dayOccurrences[day]) {
+        dayOccurrences[day] = {
+          listing: 0,
+          modification: 0,
+        };
+      }
+
+      dayOccurrences[day][type]++;
+    });
+
+    return dayOccurrences;
+  };
+
+  const occurrences = occurrencesCount(logs);
+  console.log(Object.keys(occurrences));
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+      },
+      title: {
+        display: false,
+        text: 'Last Month Review Trend',
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          maxTicksLimit: 5,
+        },
+        display: true,
+      },
+      y: {
+        ticks: {
+          stepSize: 1,
+        },
+        display: true,
+      },
+    },
+  };
+
+  const data = {
+    labels: Object.keys(occurrences).reverse(),
+    datasets: [
+      {
+        label: 'Listing Requests',
+        data: Object.values(occurrences)
+          .reverse()
+          .map((log) => log.listing),
+        backgroundColor: 'orange',
+        borderColor: 'orange',
+        cubicInterpolationMode: 'monotone',
+      },
+      {
+        label: 'Modification Requests',
+        data: Object.values(occurrences)
+          .reverse()
+          .map((log) => log.modification),
+        backgroundColor: 'blue',
+        borderColor: 'blue',
+        cubicInterpolationMode: 'monotone',
+      },
+    ],
+  };
   return (
     <DashboardContent>
-      <DataTable
-        columns={columns}
-        data={filteredReviews}
-        responsive
-        subHeader
-        subHeaderComponent={subHeaderComponentMemo}
-        pagination
-        paginationPerPage={10}
-        paginationRowsPerPageOptions={[5, 10, 15]}
-        progressPending={loading}
-      />
+      <Styles.OptionContainer>
+        {periods.map((period) => (
+          <Styles.Option
+            key={period.id}
+            selected={period.value === selectedPeriod}
+            onClick={() => setSelectedPeriod(period.value)}
+          >
+            <Text variant="sub" fontWeight={600}>
+              {period.id}
+            </Text>
+          </Styles.Option>
+        ))}
+      </Styles.OptionContainer>
+      <Box sx={{ height: '300px' }}>
+        <Line data={data} options={options} />
+      </Box>
     </DashboardContent>
   );
 };
 
-export default LogsTable;
+export default LogsLineChart;

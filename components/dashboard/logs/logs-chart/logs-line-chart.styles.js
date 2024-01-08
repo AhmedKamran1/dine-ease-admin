@@ -13,6 +13,6 @@ export const Option = styled(PaddedButton)(({ theme, selected }) => ({
 
 export const OptionContainer = styled(FlexContainer)(({ theme }) => ({
   gap: theme.spacing(1),
-  justifyContent: 'left',
-  marginTop: theme.spacing(2),
+  justifyContent: 'right',
+  marginBottom: theme.spacing(1),
 }));

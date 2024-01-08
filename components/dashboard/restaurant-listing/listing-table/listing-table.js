@@ -182,16 +182,16 @@ const ListingTable = ({
   const listingHandler = (tab) => {
     switch (tab) {
       case 'Pending':
-        setData(pendingRestaurants.data);
+        setData(pendingRestaurants?.data);
         break;
       case 'Approved':
-        setData(approvedRestaurants.data.restaurants);
+        setData(approvedRestaurants?.data?.restaurants);
         break;
       case 'Rejected':
-        setData(allRestaurants.data);
+        setData(allRestaurants?.data);
         break;
       default:
-        setData(allRestaurants.data);
+        setData(allRestaurants?.data);
     }
   };
 
@@ -226,7 +226,7 @@ const ListingTable = ({
               selected={+option.includes(tab)}
               onClick={() => setTab(option)}
             >
-              <Text variant="body" fontWeight={500}>
+              <Text variant="sub" fontWeight={600}>
                 {option}
               </Text>
             </Styles.Option>
