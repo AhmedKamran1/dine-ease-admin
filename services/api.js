@@ -11,4 +11,17 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (res) => {
+    return Promise.resolve(res);
+  },
+  (error) => {
+    if (error.response && error.response.data.message === 'jwt expired') {
+      localStorage.clear();
+      window.location = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;

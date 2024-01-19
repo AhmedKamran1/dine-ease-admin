@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { userActions } from '@/store/user/userSlice';
+import { useDispatch } from 'react-redux';
 
 //Styles
 import { List, ListItem, ListItemIcon } from '@mui/material';
@@ -20,13 +22,20 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const DashboardLayout = ({ children }) => {
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const value = router.asPath.split('/');
   const [selectedPage, setSelectedPage] = useState(value[value.length - 1]);
   const [open, setOpen] = useState(false);
+
+  const handleLogout = () => {
+    dispatch(userActions.logout());
+    localStorage.clear();
+  };
 
   const dashboardLinks = [
     {
@@ -40,7 +49,7 @@ const DashboardLayout = ({ children }) => {
       icon: <EditNoteIcon />,
     },
     {
-      id: 'modify-requests',
+      id: 'modify-request',
       text: 'Modify Requests',
       icon: <MenuBookIcon />,
     },
@@ -50,7 +59,7 @@ const DashboardLayout = ({ children }) => {
       icon: <WorkHistoryIcon />,
     },
     {
-      id: 'payments',
+      id: 'payment',
       text: 'Payments',
       icon: <MonetizationOnIcon />,
     },
@@ -86,16 +95,14 @@ const DashboardLayout = ({ children }) => {
           ))}
         </List>
         <List sx={{ mt: 'auto', mb: 5 }}>
-          <Link href={`/`}>
-            <ListItem>
-              <DrawerListButton>
-                <ListItemIcon>
-                  <KeyboardArrowLeftIcon />
-                </ListItemIcon>
-                <DrawerListText primary={'Logout'} open={open} />
-              </DrawerListButton>
-            </ListItem>
-          </Link>
+          <ListItem>
+            <DrawerListButton onClick={handleLogout}>
+              <ListItemIcon>
+                <LogoutIcon />
+              </ListItemIcon>
+              <DrawerListText primary="Logout" open={open} />
+            </DrawerListButton>
+          </ListItem>
         </List>
       </CustomDrawer>
       {children}

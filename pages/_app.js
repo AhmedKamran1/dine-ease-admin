@@ -1,24 +1,25 @@
-//Store
+// Store
 import { Provider } from 'react-redux';
-import { wrapper } from '@/store/store';
-import { ThemeContextProvider } from '@/context/theme-provider';
+import { persistor, store } from '@/store/store';
+import { PersistGate } from 'redux-persist/integration/react';
 
-//Styles
+// Styles
+import { ThemeContextProvider } from '@/context/theme-provider';
 import '@/styles/globals.css';
 
-//Layout
+// Layout
 import Layout from '@/components/layout/layout';
 
 export default function App({ Component, pageProps, ...rest }) {
-  const { store } = wrapper.useWrappedStore(rest);
-
   const getLayout = Component.getLayout || ((page) => page);
 
   return (
     <Provider store={store}>
-      <ThemeContextProvider>
-        <Layout>{getLayout(<Component {...pageProps} />)}</Layout>
-      </ThemeContextProvider>
+      <PersistGate loading={<h1>Loading</h1>} persistor={persistor}>
+        <ThemeContextProvider>
+          <Layout>{getLayout(<Component {...pageProps} />)}</Layout>
+        </ThemeContextProvider>
+      </PersistGate>
     </Provider>
   );
 }
