@@ -15,3 +15,7 @@ export const getAllRestaurants = () => {
 export const getPendingRestaurants = () => {
   return api.get(`http://localhost:${port}/api/${service}/pending`);
 };
+
+export const restaurantStatusUpdate = (id, payload) => {
+  return api.patch(`http://localhost:${port}/api/${service}/status/${id}`, payload);
+};
