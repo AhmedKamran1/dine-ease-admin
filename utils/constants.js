@@ -12,7 +12,7 @@ export const DASHBOARD_DRAWER_RESPONSIVEWIDTH = 70;
 export const Status = {
   PENDING: { value: 'pending', text: 'Pending' },
   APPROVED: { value: 'approved', text: 'Approved' },
-  REJECTED: { value: 'rejected', text: 'Rejected' },
+  DELETED: { value: 'deleted', text: 'Deleted' },
 };
 
 export const dashboardLinks = [

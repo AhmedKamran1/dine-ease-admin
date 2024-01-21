@@ -16,8 +16,8 @@ import { Status } from '@/utils/constants';
 const Cards = ({ allRestaurants }) => {
   const pendingCount = allRestaurants[Status.PENDING.value].length;
   const approvedCount = allRestaurants[Status.APPROVED.value].length;
-  const rejectedCount = allRestaurants[Status.REJECTED.value].length;
-  const total = approvedCount + rejectedCount;
+  const deletedCount = allRestaurants[Status.DELETED.value].length;
+  const total = approvedCount + deletedCount;
 
   const cards = [
     {
@@ -31,8 +31,8 @@ const Cards = ({ allRestaurants }) => {
       icon: <CheckCircleIcon color="primary" />,
     },
     {
-      type: Status.REJECTED.text,
-      count: rejectedCount,
+      type: Status.DELETED.text,
+      count: deletedCount,
       icon: <CancelIcon color="primary" />,
     },
     { type: 'Total', count: total, icon: <RestaurantIcon color="primary" /> },

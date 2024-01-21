@@ -39,7 +39,7 @@ const RestaurantListing = () => {
     const status = restaurant.status;
 
     if (status === Status.APPROVED.value && restaurant.isDeleted) {
-      acc[Status.REJECTED.value].push(restaurant);
+      acc[Status.DELETED.value].push(restaurant);
     } else {
       acc[status].push(restaurant);
     }

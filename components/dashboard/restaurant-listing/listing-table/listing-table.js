@@ -161,7 +161,7 @@ const ListingTable = ({ allRestaurants, loading, refetchData }) => {
         response = await deleteRestaurant(restaurant.id);
       } else {
         response = await restaurantStatusUpdate(restaurant.id, {
-          status: Status.REJECTED.value,
+          status: 'rejected',
           remarks: remarks,
         });
       }
