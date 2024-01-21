@@ -1,68 +1,59 @@
 import React from 'react';
 import useSWR from 'swr';
+import { enqueueSnackbar } from 'notistack';
 
-//Styles
+// Styles
 import { DashboardContainer } from '@/components/UI';
 import { Grid } from '@mui/material';
 
 // Services
-import {
-  getAllRestaurants,
-  getApprovedRestaurants,
-  getPendingRestaurants,
-} from '@/services';
+import { getAllRestaurants } from '@/services';
 
 // Components
 import ListingTable from './listing-table/listing-table';
 
-// Snackbar
-import { enqueueSnackbar } from 'notistack';
-import { getError } from '@/helpers/snackbarHelpers';
+// Helpers
+import { getError } from '@/helpers';
+
+// Utils
+import { Status } from '@/utils/constants';
 
 const RestaurantListing = () => {
-  const {
-    data: pendingRestaurants,
-    error: pendingError,
-    isLoading: loadPending,
-    mutate: mutatePending,
-  } = useSWR('/api/pendingRestaurants', getPendingRestaurants);
+  const { data, error, isLoading, mutate } = useSWR(
+    '/api/allRestaurants',
+    getAllRestaurants
+  );
 
-  const {
-    data: approvedRestaurants,
-    error: approvedError,
-    isLoading: loadApproved,
-    mutate: mutateApproved,
-  } = useSWR('/api/approvedRestaurants', getApprovedRestaurants);
-
-  const {
-    data: allRestaurants,
-    error: allError,
-    isLoading: loadAll,
-  } = useSWR('/api/allRestaurants', getAllRestaurants);
-
-  const loading = loadPending && loadApproved && loadAll;
-
-  if (pendingError || approvedError || allError) {
-    enqueueSnackbar({
-      variant: 'error',
-      message: getError(pendingError || approvedError || allError),
-    });
+  if (error) {
+    enqueueSnackbar({ variant: 'error', message: getError(error) });
   }
 
-  const refetchData = () => {
-    mutatePending();
-    mutateApproved();
-  };
+  // Initialize counts for each status to 0
+  const initialCounts = Object.values(Status).reduce((acc, status) => {
+    acc[status.value] = [];
+    return acc;
+  }, {});
+
+  // Use the initialCounts to initialize transformedData
+  const transformedData = (data?.data || []).reduce((acc, restaurant) => {
+    const status = restaurant.status;
+
+    if (status === Status.APPROVED.value && restaurant.isDeleted) {
+      acc[Status.REJECTED.value].push(restaurant);
+    } else {
+      acc[status].push(restaurant);
+    }
+
+    return acc;
+  }, initialCounts);
 
   return (
     <DashboardContainer container columnSpacing={2} rowGap={1}>
       <Grid item xs={12}>
         <ListingTable
-          pendingRestaurants={pendingRestaurants}
-          approvedRestaurants={approvedRestaurants}
-          allRestaurants={allRestaurants}
-          loading={loading}
-          refetchData={refetchData}
+          allRestaurants={transformedData}
+          loading={isLoading}
+          refetchData={mutate}
         />
       </Grid>
     </DashboardContainer>

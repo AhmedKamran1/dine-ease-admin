@@ -15,7 +15,7 @@ import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import BadgeIcon from '@mui/icons-material/Badge';
 
 // Helpers
-import { getDate } from '@/helpers/dateHelpers';
+import { getDate } from '@/helpers';
 
 const logsData = [
   {

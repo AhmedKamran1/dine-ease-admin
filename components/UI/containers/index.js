@@ -1,5 +1,6 @@
 import { Grid, Box, styled } from '@mui/material';
 import {
+  NAV_HEIGHT,
   DASHBOARD_DRAWER_FULLWIDTH,
   DASHBOARD_DRAWER_RESPONSIVEWIDTH,
 } from '@/utils/constants';
@@ -15,7 +16,7 @@ export const PageContainer = styled(Box)({
 });
 
 export const SecondaryContainer = styled(Grid)({
-  height: '100vh',
+  height: `calc(100vh - ${NAV_HEIGHT}px)`,
   width: '90%',
   margin: 'auto',
   alignItems: 'center',

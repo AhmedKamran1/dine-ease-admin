@@ -1,5 +1,8 @@
 import React from 'react';
 
+// Components
+import Navbar from '../navbar/navbar';
+
 // Styles
 import { useMediaQuery } from '@mui/material';
 import { PageContainer } from '../UI';
@@ -22,9 +25,10 @@ const Layout = ({ children }) => {
         }}
         anchorOrigin={{
           vertical: 'top',
-          horizontal: isMobile ? 'center' : 'center',
+          horizontal: isMobile ? 'center' : 'right',
         }}
       >
+        {/* <Navbar /> */}
         <PageContainer>{children}</PageContainer>
       </SnackbarProvider>
     </React.Fragment>

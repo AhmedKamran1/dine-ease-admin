@@ -10,13 +10,34 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 
-const Cards = ({ pendingCount, approvedCount, totalCount }) => {
+// Utils
+import { Status } from '@/utils/constants';
+
+const Cards = ({ allRestaurants }) => {
+  const pendingCount = allRestaurants[Status.PENDING.value].length;
+  const approvedCount = allRestaurants[Status.APPROVED.value].length;
+  const rejectedCount = allRestaurants[Status.REJECTED.value].length;
+  const total = approvedCount + rejectedCount;
+
   const cards = [
-    { type: 'Pending', count: pendingCount, icon: <PendingIcon color="primary" /> },
-    { type: 'Approved', count: approvedCount, icon: <CheckCircleIcon color="primary" /> },
-    { type: 'Rejected', count: totalCount, icon: <CancelIcon color="primary" /> },
-    { type: 'Total', count: totalCount, icon: <RestaurantIcon color="primary" /> },
+    {
+      type: Status.PENDING.text,
+      count: pendingCount,
+      icon: <PendingIcon color="primary" />,
+    },
+    {
+      type: Status.APPROVED.text,
+      count: approvedCount,
+      icon: <CheckCircleIcon color="primary" />,
+    },
+    {
+      type: Status.REJECTED.text,
+      count: rejectedCount,
+      icon: <CancelIcon color="primary" />,
+    },
+    { type: 'Total', count: total, icon: <RestaurantIcon color="primary" /> },
   ];
+
   return (
     <FlexContainer
       sx={{ gap: 1, flexWrap: 'wrap', justifyContent: 'start', mt: 2, mb: 2 }}

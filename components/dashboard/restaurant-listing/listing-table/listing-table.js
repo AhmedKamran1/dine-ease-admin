@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { enqueueSnackbar } from 'notistack';
 
 // Styles
 import * as Styles from './listing-table.styles';
@@ -20,30 +21,22 @@ import Cards from '../card/card';
 import ConfirmModal from '@/components/modal/confirmation-modal/confirmation-modal';
 import RejectModal from '@/components/modal/rejection-modal/rejection-modal';
 
-// Snackbar
-import { enqueueSnackbar } from 'notistack';
+// Services
+import { deleteRestaurant, restaurantStatusUpdate } from '@/services';
 
 // Helpers
-import { getError } from '@/helpers/snackbarHelpers';
+import { getError } from '@/helpers';
 
-// Services
-import { restaurantStatusUpdate } from '@/services';
+// Utils
+import { Status } from '@/utils/constants';
 
-const tabSelection = ['Pending', 'Approved', 'Rejected'];
-
-const ListingTable = ({
-  pendingRestaurants,
-  approvedRestaurants,
-  allRestaurants,
-  loading,
-  refetchData,
-}) => {
+const ListingTable = ({ allRestaurants, loading, refetchData }) => {
   const [data, setData] = useState([]);
-  const [tab, setTab] = useState('Pending');
+  const [tab, setTab] = useState(Status.PENDING);
   const [filterText, setFilterText] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
-  const [restaurantId, setRestaurantId] = useState(null);
+  const [restaurant, setRestaurant] = useState(null);
 
   const filteredData = data?.filter(
     (item) =>
@@ -120,12 +113,14 @@ const ListingTable = ({
     {
       selector: (row) => (
         <React.Fragment>
-          <IconButton onClick={() => handleShowConfirmModal(row.id)}>
-            <Tooltip title="Approve Restaurant" placement="top" arrow>
-              <CheckCircleIcon color="success" />
-            </Tooltip>
-          </IconButton>
-          <IconButton onClick={() => handleShowRejectModal(row.id)}>
+          {Status.PENDING === tab && (
+            <IconButton onClick={() => handleShowConfirmModal(row)}>
+              <Tooltip title="Approve Restaurant" placement="top" arrow>
+                <CheckCircleIcon color="success" />
+              </Tooltip>
+            </IconButton>
+          )}
+          <IconButton onClick={() => handleShowRejectModal(row)}>
             <Tooltip title="Reject Restaurant" placement="top" arrow>
               <CancelIcon color="error" />
             </Tooltip>
@@ -136,24 +131,22 @@ const ListingTable = ({
     },
   ];
 
-  const handleShowConfirmModal = (id) => {
+  const handleShowConfirmModal = (data) => {
     setShowConfirmModal((prevState) => !prevState);
-    setRestaurantId(id);
+    setRestaurant(data);
   };
 
-  const handleShowRejectModal = (id) => {
+  const handleShowRejectModal = (data) => {
     setShowRejectModal((prevState) => !prevState);
-    setRestaurantId(id);
+    setRestaurant(data);
   };
 
   const restaurantApproveHandler = async () => {
     try {
-      const response = await restaurantStatusUpdate(restaurantId, { status: 'approved' });
-      // setData((prevState) => prevState.filter((record) => record.id !== restaurantId));
-      enqueueSnackbar({
-        variant: 'success',
-        message: response.data,
+      const response = await restaurantStatusUpdate(restaurant.id, {
+        status: 'approved',
       });
+      enqueueSnackbar({ variant: 'success', message: response.data });
     } catch (e) {
       enqueueSnackbar({ variant: 'error', message: getError(e) });
     } finally {
@@ -163,15 +156,16 @@ const ListingTable = ({
 
   const restaurantRejectHandler = async (remarks) => {
     try {
-      const response = await restaurantStatusUpdate(restaurantId, {
-        status: 'rejected',
-        remarks: remarks,
-      });
-      // setData((prevState) => prevState.filter((record) => record.id !== restaurantId));
-      enqueueSnackbar({
-        variant: 'success',
-        message: response.data,
-      });
+      let response;
+      if (restaurant.status === Status.APPROVED.value) {
+        response = await deleteRestaurant(restaurant.id);
+      } else {
+        response = await restaurantStatusUpdate(restaurant.id, {
+          status: Status.REJECTED.value,
+          remarks: remarks,
+        });
+      }
+      enqueueSnackbar({ variant: 'success', message: response.data });
     } catch (e) {
       enqueueSnackbar({ variant: 'error', message: getError(e) });
     } finally {
@@ -180,24 +174,13 @@ const ListingTable = ({
   };
 
   const listingHandler = (tab) => {
-    switch (tab) {
-      case 'Pending':
-        setData(pendingRestaurants?.data);
-        break;
-      case 'Approved':
-        setData(approvedRestaurants?.data?.restaurants);
-        break;
-      case 'Rejected':
-        setData(allRestaurants?.data);
-        break;
-      default:
-        setData(allRestaurants?.data);
-    }
+    setData(allRestaurants[tab.value]);
   };
 
   useEffect(() => {
     if (!loading) listingHandler(tab);
-  }, [tab, loading, approvedRestaurants, pendingRestaurants]);
+    // eslint-disable-next-line
+  }, [tab, loading, allRestaurants]);
 
   return (
     <React.Fragment>
@@ -220,25 +203,25 @@ const ListingTable = ({
           Restaurant Listings
         </Text>
         <Styles.OptionContainer>
-          {tabSelection.map((option) => (
+          {Object.values(Status).map((status) => (
             <Styles.Option
-              key={option}
-              selected={+option.includes(tab)}
-              onClick={() => setTab(option)}
+              key={status.value}
+              selected={status.value === tab.value}
+              onClick={() => setTab(status)}
             >
               <Text variant="sub" fontWeight={600}>
-                {option}
+                {status.text}
               </Text>
             </Styles.Option>
           ))}
         </Styles.OptionContainer>
-        <Cards
-          pendingCount={pendingRestaurants?.data?.length}
-          approvedCount={approvedRestaurants?.data?.restaurants.length}
-          totalCount={allRestaurants?.data?.length}
-        />
+        <Cards allRestaurants={allRestaurants} />
         <DataTable
-          columns={tab === 'Pending' ? columns : columns.slice(0, -1)}
+          columns={
+            [Status.PENDING, Status.APPROVED].includes(tab)
+              ? columns
+              : columns.slice(0, -1)
+          }
           data={filteredData}
           responsive
           subHeader

@@ -1,32 +1,37 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { userActions } from '@/store/user/userSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUserState, userActions } from '@/store/user/userSlice';
+
+// Components
+import withAuth from '../auth/with-auth';
 
 //Styles
-import { List, ListItem, ListItemIcon } from '@mui/material';
+import { Avatar, Box, List, ListItem, ListItemIcon } from '@mui/material';
 import {
   DrawerIcon,
   CustomDrawer,
   DrawerListText,
   DrawerListButton,
   DrawerListItem,
+  Text,
+  FlexContainer,
 } from '../UI';
 
-//Icons
-import SummarizeIcon from '@mui/icons-material/Summarize';
-import EditNoteIcon from '@mui/icons-material/EditNote';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
+// Icons
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import LogoutIcon from '@mui/icons-material/Logout';
 
+// Utils
+import { dashboardLinks } from '@/utils/constants';
+
 const DashboardLayout = ({ children }) => {
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const user = useSelector(selectUserState);
 
   const value = router.asPath.split('/');
   const [selectedPage, setSelectedPage] = useState(value[value.length - 1]);
@@ -36,34 +41,6 @@ const DashboardLayout = ({ children }) => {
     dispatch(userActions.logout());
     localStorage.clear();
   };
-
-  const dashboardLinks = [
-    {
-      id: 'overview',
-      text: 'Overview',
-      icon: <SummarizeIcon />,
-    },
-    {
-      id: 'restaurant-listing',
-      text: 'Restaurant Listings',
-      icon: <EditNoteIcon />,
-    },
-    {
-      id: 'modify-request',
-      text: 'Modify Requests',
-      icon: <MenuBookIcon />,
-    },
-    {
-      id: 'logs',
-      text: 'Logs',
-      icon: <WorkHistoryIcon />,
-    },
-    {
-      id: 'payment',
-      text: 'Payments',
-      icon: <MonetizationOnIcon />,
-    },
-  ];
 
   const handleNavDrawer = () => {
     setOpen((prevState) => !prevState);
@@ -79,8 +56,31 @@ const DashboardLayout = ({ children }) => {
             <KeyboardArrowRightIcon color="primary" fontSize="large" />
           )}
         </DrawerIcon>
-        <List>
-          {dashboardLinks.map((item, index) => (
+        <FlexContainer
+          sx={{
+            gap: 2,
+            flexDirection: 'column',
+            mt: 3,
+            display: { xs: open ? 'flex' : 'none', md: 'flex' },
+          }}
+        >
+          <Avatar
+            alt="admin-avatar"
+            src={
+              user.avatar &&
+              getFileUrl(
+                process.env.NEXT_PUBLIC_RESTAURANT_BUCKET,
+                `${user.id}/avatar/${user.avatar}`
+              )
+            }
+            sx={{ height: 120, width: 120 }}
+          />
+          <Text variant="subHeader" fontWeight={500}>
+            {user.name}
+          </Text>
+        </FlexContainer>
+        <List sx={{ margin: 'auto 0' }}>
+          {dashboardLinks.map((item) => (
             <Link href={`/dashboard/${item.id}`} key={item.id}>
               <DrawerListItem>
                 <DrawerListButton
@@ -94,7 +94,7 @@ const DashboardLayout = ({ children }) => {
             </Link>
           ))}
         </List>
-        <List sx={{ mt: 'auto', mb: 5 }}>
+        <List sx={{ mt: 'auto', mb: 3 }}>
           <ListItem>
             <DrawerListButton onClick={handleLogout}>
               <ListItemIcon>
@@ -110,4 +110,4 @@ const DashboardLayout = ({ children }) => {
   );
 };
 
-export default DashboardLayout;
+export default withAuth(DashboardLayout);
