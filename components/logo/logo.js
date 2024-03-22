@@ -12,7 +12,7 @@ const Logo = ({
 
   const clickHandler = () => {
     if (!isNavigate) return;
-    router.push('/');
+    router.push('/dashboard/overview');
   };
 
   return (

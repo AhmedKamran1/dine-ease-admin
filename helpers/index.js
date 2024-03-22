@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 export const getFileUrl = (bucket, key) => {
-  return `https://${bucket}.s3.${process.env.NEXT_PUBLIC_S3_REGION}.amazonaws.com/${key}`;
+  return `https://${bucket}.s3.${process.env.NEXT_PUBLIC_AWS_S3_REGION}.amazonaws.com/${key}`;
 };
 
 export const getError = (e) => {

@@ -8,7 +8,7 @@ import { selectUserState, userActions } from '@/store/user/userSlice';
 import withAuth from '../auth/with-auth';
 
 //Styles
-import { Avatar, Box, List, ListItem, ListItemIcon } from '@mui/material';
+import { Avatar, List, ListItem, ListItemIcon } from '@mui/material';
 import {
   DrawerIcon,
   CustomDrawer,
@@ -26,6 +26,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 // Utils
 import { dashboardLinks } from '@/utils/constants';
+import { getFileUrl } from '@/helpers';
 
 const DashboardLayout = ({ children }) => {
   const dispatch = useDispatch();
@@ -69,7 +70,7 @@ const DashboardLayout = ({ children }) => {
             src={
               user.avatar &&
               getFileUrl(
-                process.env.NEXT_PUBLIC_RESTAURANT_BUCKET,
+                process.env.NEXT_PUBLIC_AWS_S3_USERS_BUCKET,
                 `${user.id}/avatar/${user.avatar}`
               )
             }

@@ -1,17 +1,17 @@
 import api from './api';
-import { PORTS } from '@/utils/port';
 
-const service = 'restaurant';
-const port = PORTS[service];
+export const getAllRecords = () => {
+  return api.get(`/api/restaurant/records/all`);
+};
 
 export const getAllRestaurants = () => {
-  return api.get(`http://localhost:${port}/api/${service}/all`);
+  return api.get(`/api/restaurant/all`);
 };
 
 export const restaurantStatusUpdate = (id, payload) => {
-  return api.patch(`http://localhost:${port}/api/${service}/status/${id}`, payload);
+  return api.patch(`/api/restaurant/status/${id}`, payload);
 };
 
 export const deleteRestaurant = (id) => {
-  return api.delete(`http://localhost:${port}/api/${service}/${id}`);
+  return api.delete(`/api/restaurant/${id}`);
 };
