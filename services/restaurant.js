@@ -15,3 +15,17 @@ export const restaurantStatusUpdate = (id, payload) => {
 export const deleteRestaurant = (id) => {
   return api.delete(`/api/restaurant/${id}`);
 };
+
+// Modify Requests
+
+export const getAllModificationRequests = () => {
+  return api.get(`/api/restaurant/modify/all`);
+};
+
+export const updateRequest = (restaurantId, payload) => {
+  return api.patch(`/api/restaurant/request/${restaurantId}`, payload);
+};
+
+export const deleteRequest = (requestId) => {
+  return api.delete(`/api/restaurant/modify/${requestId}`);
+};
