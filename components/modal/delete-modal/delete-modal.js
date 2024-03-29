@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
+import { enqueueSnackbar } from 'notistack';
 
 // Styles
 import { Button, Modal } from '@mui/material';
-import * as Styles from './confirmation-modal.styles';
+import * as Styles from './delete-modal.styles';
 import { FlexContainer, Text } from '@/components/UI';
 
 // Icons
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import Delete from '@mui/icons-material/Delete';
 
 // Helpers
 import { getError } from '@/helpers';
 
-// Snackbar
-import { enqueueSnackbar } from 'notistack';
-
-const ConfirmModal = ({ showModal, handleCloseModal, handleConfirm }) => {
+const DeleteModal = ({ showModal, handleCloseModal, deleteHandler }) => {
   const [loading, setLoading] = useState(false);
 
   const clickHandler = async () => {
     try {
       setLoading(true);
-      await handleConfirm();
+      await deleteHandler();
     } catch (e) {
       enqueueSnackbar({ variant: 'error', message: getError(e) });
     } finally {
@@ -32,20 +30,20 @@ const ConfirmModal = ({ showModal, handleCloseModal, handleConfirm }) => {
   return (
     <Modal open={showModal} onClose={handleCloseModal}>
       <Styles.ModalContainer>
-        <CheckCircleIcon sx={{ fontSize: '6rem' }} color="success" />
+        <Delete sx={{ fontSize: '6rem' }} color="error" />
         <Text variant="main" fontWeight={800}>
-          Accept Confirmation
+          Delete Confirmation
         </Text>
         <Text variant="body" textAlign="center">
-          Are you sure you want to perform this action?
+          Are you sure you want to perform this delete action?
         </Text>
         <FlexContainer gap={2}>
-          <Button variant="outlined" onClick={handleCloseModal}>
+          <Button variant="outlined" onClick={handleCloseModal} disabled={loading}>
             <Text variant="body">Cancel</Text>
           </Button>
           <Button
             variant="contained"
-            color="success"
+            color="error"
             onClick={clickHandler}
             disabled={loading}
           >
@@ -59,4 +57,4 @@ const ConfirmModal = ({ showModal, handleCloseModal, handleConfirm }) => {
   );
 };
 
-export default ConfirmModal;
+export default DeleteModal;
