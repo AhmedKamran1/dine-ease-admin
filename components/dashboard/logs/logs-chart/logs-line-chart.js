@@ -57,7 +57,7 @@ const LogsLineChart = ({ logs }) => {
       if (!dayOccurrences[day]) {
         dayOccurrences[day] = {
           listing: 0,
-          modification: 0,
+          modify: 0,
         };
       }
 
@@ -109,7 +109,7 @@ const LogsLineChart = ({ logs }) => {
       },
       {
         label: 'Modification Requests',
-        data: Object.values(occurrences).map((log) => log.modification),
+        data: Object.values(occurrences).map((log) => log.modify),
         backgroundColor: 'blue',
         borderColor: 'blue',
         cubicInterpolationMode: 'monotone',

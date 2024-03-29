@@ -42,10 +42,6 @@ const LogsPieChart = ({ logs }) => {
       legend: {
         display: true,
       },
-      title: {
-        display: false,
-        text: 'Listing',
-      },
     },
     scales: {
       x: {
@@ -68,9 +64,8 @@ const LogsPieChart = ({ logs }) => {
     datasets: [
       {
         label: 'Number of Records',
-        data: [countByType['listing'], countByType['modification']],
-        backgroundColor: ['orange', 'red'],
-        // cubicInterpolationMode: 'monotone',
+        data: [countByType['listing'], countByType['modify']],
+        backgroundColor: ['orange', 'blue'],
       },
     ],
   };

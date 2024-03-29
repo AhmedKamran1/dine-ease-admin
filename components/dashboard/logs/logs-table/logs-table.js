@@ -1,13 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { enqueueSnackbar } from 'notistack';
+import React, { useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
-
-// Services
-import { getAllRecords } from '@/services';
 
 // Styles
 import { DashboardContent, FlexContainer, InputField } from '@/components/UI';
-import { InputAdornment } from '@mui/material';
+import { Chip, InputAdornment } from '@mui/material';
 
 // Icons
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -82,7 +78,13 @@ const LogsTable = ({ logs }) => {
           Request Type
         </FlexContainer>
       ),
-      selector: (row) => row.type,
+      selector: (row) => (
+        <Chip
+          label={row.type}
+          color={row.type === 'listing' ? 'primary' : 'info'}
+          sx={{ color: 'text.primary' }}
+        />
+      ),
       sortable: 'true',
       center: 'true',
     },
@@ -93,7 +95,13 @@ const LogsTable = ({ logs }) => {
           Status
         </FlexContainer>
       ),
-      selector: (row) => row.status,
+      selector: (row) => (
+        <Chip
+          label={row.status}
+          color={row.status === 'approved' ? 'success' : 'error'}
+          sx={{ color: 'text.primary' }}
+        />
+      ),
       center: 'true',
     },
     {
