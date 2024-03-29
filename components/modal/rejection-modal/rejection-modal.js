@@ -15,7 +15,8 @@ import CloseIcon from '@mui/icons-material/Close';
 const RejectModal = ({ showModal, handleCloseModal, handleReject }) => {
   const submitHandler = async (values) => {
     formik.setSubmitting(true);
-    handleReject(values.reason);
+    values.reason = values.reason.trim();
+    await handleReject(values.reason);
     formik.setSubmitting(false);
     handleCloseModal();
   };
