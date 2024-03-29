@@ -1,9 +1,10 @@
 import React from 'react';
 import DashboardLayout from '@/components/layout/dashboard-layout';
 import withAuth from '@/components/auth/with-auth';
+import ModifyRequest from '@/components/dashboard/modify-request/modify-request';
 
 const ModifyRequestPage = () => {
-  return <div>ModifyRequest</div>;
+  return <ModifyRequest />;
 };
 
 ModifyRequestPage.getLayout = (page) => {
