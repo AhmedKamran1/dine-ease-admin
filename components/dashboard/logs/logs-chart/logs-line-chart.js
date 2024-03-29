@@ -20,6 +20,9 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
+// Utils
+import { Periods } from '@/utils/constants';
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -30,220 +33,7 @@ ChartJS.register(
   Legend
 );
 
-const logsData = [
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-12-28T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'modification',
-    status: 'rejected',
-    createdAt: '2023-01-06T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-12-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-11-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'modification',
-    status: 'rejected',
-    createdAt: '2023-10-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-09-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'modification',
-    status: 'pending',
-    createdAt: '2023-08-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-07-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'modification',
-    status: 'rejected',
-    createdAt: '2023-06-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-05-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-04-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'modification',
-    status: 'rejected',
-    createdAt: '2023-03-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-02-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-01-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'modification',
-    status: 'rejected',
-    createdAt: '2023-12-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-11-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-10-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'modification',
-    status: 'rejected',
-    createdAt: '2023-09-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-08-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'modification',
-    status: 'pending',
-    createdAt: '2023-07-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-06-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-05-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'modification',
-    status: 'rejected',
-    createdAt: '2023-04-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-03-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'listing',
-    status: 'approved',
-    createdAt: '2023-02-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'modification',
-    status: 'rejected',
-    createdAt: '2023-01-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'modification',
-    status: 'rejected',
-    createdAt: '2023-01-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'modification',
-    status: 'rejected',
-    createdAt: '2023-01-04T17:16:59.958+00:00',
-  },
-  {
-    adminId: '655c9411a62e7977c601cf3e',
-    restaurantId: '658da7c2f9dca6b460be688c',
-    type: 'modification',
-    status: 'rejected',
-    createdAt: '2023-01-04T17:16:59.958+00:00',
-  },
-];
-
-const periods = [
-  { id: '30 Days', value: 1 },
-  { id: '3 Months', value: 3 },
-  { id: '6 Months', value: 6 },
-  { id: '1 Year', value: 12 },
-];
-
-const LogsLineChart = () => {
+const LogsLineChart = ({ logs }) => {
   const [selectedPeriod, setSelectedPeriod] = useState(1);
 
   const filterLogsByDateRange = (logs) => {
@@ -255,7 +45,7 @@ const LogsLineChart = () => {
     return filteredLogs;
   };
 
-  const logs = filterLogsByDateRange(logsData);
+  const filteredLogs = filterLogsByDateRange(logs);
 
   const occurrencesCount = (logs) => {
     const dayOccurrences = {};
@@ -277,8 +67,7 @@ const LogsLineChart = () => {
     return dayOccurrences;
   };
 
-  const occurrences = occurrencesCount(logs);
-  console.log(Object.keys(occurrences));
+  const occurrences = occurrencesCount(filteredLogs);
 
   const options = {
     responsive: true,
@@ -309,22 +98,18 @@ const LogsLineChart = () => {
   };
 
   const data = {
-    labels: Object.keys(occurrences).reverse(),
+    labels: Object.keys(occurrences),
     datasets: [
       {
         label: 'Listing Requests',
-        data: Object.values(occurrences)
-          .reverse()
-          .map((log) => log.listing),
+        data: Object.values(occurrences).map((log) => log.listing),
         backgroundColor: 'orange',
         borderColor: 'orange',
         cubicInterpolationMode: 'monotone',
       },
       {
         label: 'Modification Requests',
-        data: Object.values(occurrences)
-          .reverse()
-          .map((log) => log.modification),
+        data: Object.values(occurrences).map((log) => log.modification),
         backgroundColor: 'blue',
         borderColor: 'blue',
         cubicInterpolationMode: 'monotone',
@@ -334,7 +119,7 @@ const LogsLineChart = () => {
   return (
     <DashboardContent>
       <Styles.OptionContainer>
-        {periods.map((period) => (
+        {Periods.map((period) => (
           <Styles.Option
             key={period.id}
             selected={period.value === selectedPeriod}
@@ -346,7 +131,7 @@ const LogsLineChart = () => {
           </Styles.Option>
         ))}
       </Styles.OptionContainer>
-      <Box sx={{ height: '300px' }}>
+      <Box sx={{ height: '280px' }}>
         <Line data={data} options={options} />
       </Box>
     </DashboardContent>

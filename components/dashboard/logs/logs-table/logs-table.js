@@ -18,14 +18,12 @@ import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import BadgeIcon from '@mui/icons-material/Badge';
 
 // Helpers
-import { getDate, getError } from '@/helpers';
+import { getDate } from '@/helpers';
 
-const LogsTable = () => {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
+const LogsTable = ({ logs }) => {
   const [filterText, setFilterText] = useState('');
 
-  const filteredReviews = data?.filter(
+  const filteredLogs = logs?.filter(
     (item) =>
       item.adminId.toLowerCase().includes(filterText.toLowerCase()) ||
       item.restaurantId.toLowerCase().includes(filterText.toLowerCase()) ||
@@ -33,20 +31,6 @@ const LogsTable = () => {
       item.status.toLowerCase().includes(filterText) ||
       getDate(item.createdAt).toLowerCase().includes(filterText)
   );
-
-  useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        const response = await getAllRecords();
-        setData(response.data);
-      } catch (e) {
-        enqueueSnackbar({ variant: 'error', message: getError(e) });
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
 
   const subHeaderComponentMemo = useMemo(() => {
     return (
@@ -128,14 +112,13 @@ const LogsTable = () => {
     <DashboardContent>
       <DataTable
         columns={columns}
-        data={filteredReviews}
+        data={filteredLogs}
         responsive
         subHeader
         subHeaderComponent={subHeaderComponentMemo}
         pagination
         paginationPerPage={10}
         paginationRowsPerPageOptions={[5, 10, 15]}
-        progressPending={loading}
       />
     </DashboardContent>
   );

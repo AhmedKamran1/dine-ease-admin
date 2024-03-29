@@ -1,5 +1,5 @@
-import React from 'react';
-import useSWR from 'swr';
+import React, { useEffect, useState } from 'react';
+import { enqueueSnackbar } from 'notistack';
 
 //Styles
 import { DashboardContainer } from '@/components/UI';
@@ -11,28 +11,35 @@ import LogsPieChart from './logs-chart/logs-pie-chart';
 import LogsLineChart from './logs-chart/logs-line-chart';
 
 // Services
-import { getRestaurantRecords } from '@/services';
+import { getAllRecords } from '@/services';
+import { getError } from '@/helpers';
 
 const Logs = () => {
-  // const { data: logs, error, isLoading } = useSWR('/api/records', getRestaurantRecords);
+  const [logs, setLogs] = useState([]);
 
-  // if (error) {
-  //   enqueueSnackbar({
-  //     variant: 'error',
-  //     message: getError(error),
-  //   });
-  // }
+  const fetchLogs = async () => {
+    try {
+      const response = await getAllRecords();
+      setLogs(response.data);
+    } catch (e) {
+      enqueueSnackbar({ variant: 'error', message: getError(e) });
+    }
+  };
+
+  useEffect(() => {
+    fetchLogs();
+  }, []);
 
   return (
-    <DashboardContainer container columnSpacing={2} rowGap={1}>
+    <DashboardContainer container columnSpacing={1} rowGap={1}>
       <Grid item xs={12} md={8}>
-        <LogsLineChart logs={null} />
+        <LogsLineChart logs={logs} />
       </Grid>
       <Grid item xs={12} md={4}>
-        <LogsPieChart logs={null} />
+        <LogsPieChart logs={logs} />
       </Grid>
       <Grid item xs={12}>
-        <LogsTable logs={null} loading={null} />
+        <LogsTable logs={logs} loading={null} />
       </Grid>
     </DashboardContainer>
   );
