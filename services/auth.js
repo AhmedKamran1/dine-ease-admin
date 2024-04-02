@@ -1,9 +1,16 @@
 import api from './api';
+import { PORTS } from '@/utils/port';
+
+const service = 'auth';
+const port = PORTS[service];
+
+const service2 = 'login';
+const port2 = PORTS[service2];
 
 export const checkEmail = (email) => {
-  return api.get(`/api/auth/check-email?email=${email}`);
+  return api.get(`http://localhost:${port}/api/${service}/check-email?email=${email}`);
 };
 
 export const login = (payload) => {
-  return api.post(`/api/login/admin`, payload);
+  return api.post(`http://localhost:${port2}/api/${service2}/admin`, payload);
 };
