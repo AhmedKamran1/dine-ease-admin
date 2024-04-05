@@ -43,7 +43,7 @@ const ListingTable = ({ allRestaurants, loading, refetchData }) => {
       item.name.toLowerCase().includes(filterText.toLowerCase()) ||
       item.id.toLowerCase().includes(filterText.toLowerCase()) ||
       item.taxId.toLowerCase().includes(filterText.toLowerCase()) ||
-      item.phoneNumber.toString().includes(filterText)
+      item?.phoneNumber?.toString().includes(filterText)
   );
 
   const subHeaderComponentMemo = useMemo(() => {

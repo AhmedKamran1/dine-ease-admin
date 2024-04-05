@@ -16,7 +16,7 @@ import CallIcon from '@mui/icons-material/Call';
 // Component
 import DataTable from 'react-data-table-component';
 import ConfirmModal from '@/components/modal/confirmation-modal/confirmation-modal';
-import DeleteModal from '@/components/modal/delete-modal/delete-modal';
+import RejectModal from '@/components/modal/rejection-modal/rejection-modal';
 
 // Helpers
 import { getError } from '@/helpers';
@@ -25,14 +25,14 @@ import { getError } from '@/helpers';
 import { enqueueSnackbar } from 'notistack';
 
 // Services
-import { deleteRequest, restaurantStatusUpdate, updateRequest } from '@/services';
+import { updateRequest } from '@/services';
 
 const RequestTable = ({ requests }) => {
   const [data, setData] = useState(requests);
   const [loading, setLoading] = useState(false);
   const [filterText, setFilterText] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
 
   const restaurantDetails = useRef(null);
 
@@ -41,7 +41,7 @@ const RequestTable = ({ requests }) => {
       item.name.toLowerCase().includes(filterText.toLowerCase()) ||
       item.restaurantId.toLowerCase().includes(filterText.toLowerCase()) ||
       item.taxId.toLowerCase().includes(filterText.toLowerCase()) ||
-      item.phoneNumber.toString().includes(filterText)
+      item?.phoneNumber?.toString().includes(filterText)
   );
 
   useEffect(() => {
@@ -55,8 +55,8 @@ const RequestTable = ({ requests }) => {
     restaurantDetails.current = data;
   };
 
-  const handleShowDeleteModal = (data) => {
-    setShowDeleteModal((prevState) => !prevState);
+  const handleShowRejectModal = (data) => {
+    setShowRejectModal((prevState) => !prevState);
     restaurantDetails.current = data;
   };
 
@@ -65,7 +65,6 @@ const RequestTable = ({ requests }) => {
       const response = await updateRequest(restaurantDetails.current.restaurantId, {
         status: 'approved',
       });
-      console.log(restaurantDetails.current);
       setData((prevState) =>
         prevState.filter(
           (restaurant) =>
@@ -78,15 +77,22 @@ const RequestTable = ({ requests }) => {
     }
   };
 
-  const deleteRequestHandler = async () => {
-    console.log(restaurantDetails.current);
-    const response = await deleteRequest(restaurantDetails.current.id);
-    setData((prevState) =>
-      prevState.filter(
-        (restaurant) => restaurant.restaurantId !== restaurantDetails.current.restaurantId
-      )
-    );
-    enqueueSnackbar({ variant: 'success', message: response.data });
+  const restaurantRejectHandler = async (remarks) => {
+    try {
+      const response = await updateRequest(restaurantDetails.current.restaurantId, {
+        status: 'rejected',
+        remarks: remarks,
+      });
+      setData((prevState) =>
+        prevState.filter(
+          (restaurant) =>
+            restaurant.restaurantId !== restaurantDetails.current.restaurantId
+        )
+      );
+      enqueueSnackbar({ variant: 'success', message: response.data });
+    } catch (e) {
+      enqueueSnackbar({ variant: 'error', message: getError(e) });
+    }
   };
 
   const subHeaderComponentMemo = useMemo(() => {
@@ -161,7 +167,7 @@ const RequestTable = ({ requests }) => {
               <CheckCircleIcon color="success" />
             </Tooltip>
           </IconButton>
-          <IconButton onClick={() => handleShowDeleteModal(row)}>
+          <IconButton onClick={() => handleShowRejectModal(row)}>
             <Tooltip title="Reject Request" placement="top" arrow>
               <CancelIcon color="error" />
             </Tooltip>
@@ -181,11 +187,11 @@ const RequestTable = ({ requests }) => {
           handleConfirm={approveRequestHandler}
         />
       )}
-      {showDeleteModal && (
-        <DeleteModal
-          showModal={showDeleteModal}
-          handleCloseModal={handleShowDeleteModal}
-          deleteHandler={deleteRequestHandler}
+      {showRejectModal && (
+        <RejectModal
+          showModal={showRejectModal}
+          handleCloseModal={handleShowRejectModal}
+          handleReject={restaurantRejectHandler}
         />
       )}
       <DashboardContent>
