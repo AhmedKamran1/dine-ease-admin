@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const api = axios.create({ baseURL: '/', timeout: 5000 });
+// timeout for 10s
+const api = axios.create({ baseURL: '/', timeout: 10000 });
 
 api.interceptors.request.use((config) => {
   const token = typeof window !== 'undefined' && localStorage.getItem('token');
