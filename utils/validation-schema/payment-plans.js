@@ -1,18 +1,18 @@
 import * as yup from 'yup';
 
 export const planSchema = yup.object().shape({
-  // title: yup
-  //   .string()
-  //   .trim()
-  //   .min(3, 'Must be at least 3 characters.')
-  //   .max(30, 'Must be at most 30 characters.')
-  //   .required('Title is required.'),
-  // description: yup
-  //   .string()
-  //   .trim()
-  //   .min(10, 'Must be at least 10 characters.')
-  //   .max(70, 'Must be at most 70 characters.')
-  //   .required('Description is required.'),
+  title: yup
+    .string()
+    .trim()
+    .min(3, 'Must be at least 3 characters.')
+    .max(30, 'Must be at most 30 characters.')
+    .required('Title is required.'),
+  description: yup
+    .string()
+    .trim()
+    .min(10, 'Must be at least 10 characters.')
+    .max(100, 'Must be at most 100 characters.')
+    .required('Description is required.'),
   charges: yup
     .number()
     .positive('Price must be a positive value')

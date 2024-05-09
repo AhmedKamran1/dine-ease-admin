@@ -32,6 +32,8 @@ const PlanModal = ({
 
   const formik = useFormik({
     initialValues: {
+      title: plan?.title || '',
+      description: plan?.description || '',
       charges: plan?.charges || '',
       durationInMonths: plan?.durationInMonths || '',
     },
@@ -53,6 +55,31 @@ const PlanModal = ({
         <Text variant="subHeader" fontWeight={800} mb={1.5}>
           Plan Details
         </Text>
+        <InputField
+          name="title"
+          label="Title"
+          variant="outlined"
+          placeholder="Enter Title"
+          value={formik.values.title}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.errors.title && Boolean(formik.touched.title)}
+          helperText={formik.touched.title && formik.errors.title}
+        />
+        <InputField
+          name="description"
+          label="Description"
+          variant="outlined"
+          placeholder="Enter Description"
+          value={formik.values.description}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.errors.description && Boolean(formik.touched.description)}
+          helperText={formik.touched.description && formik.errors.description}
+          multiline
+          minRows={2}
+          maxRows={4}
+        />
         <InputField
           name="charges"
           label="Charges"

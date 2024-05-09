@@ -13,16 +13,16 @@ const PlanCard = ({ item, openPlanModal, openDeleteModal, planDetails }) => {
   return (
     <Styles.PlanContainer>
       <Text variant="header" sx={{ display: 'block', mb: 2, fontWeight: 500 }}>
-        Basic
+        {item.title}
       </Text>
       <Text variant="body" sx={{ display: 'block', mb: 4 }}>
-        This is just a basic plan with basic features to prioritize restaurant searches
+        {item.description}
       </Text>
       <Text variant="bigHeader" color="primary" fontWeight={900}>
         ${item.charges}
       </Text>
-      <Text variant="body" color="primary" fontWeight={600}>
-        /{item.durationInMonths} months
+      <Text variant="main" color="primary" fontWeight={600}>
+        / Feature for {item.durationInMonths} months
       </Text>
       {item.isActive && (
         <Styles.Options>
