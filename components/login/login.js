@@ -7,6 +7,8 @@ import { Grid } from '@mui/material';
 import { FormDivider } from '../UI';
 import { SecondaryContainer } from '../UI';
 
+import image from '@/public/assets/images/scene6.svg';
+
 const Login = () => {
   return (
     <SecondaryContainer container>
@@ -17,12 +19,7 @@ const Login = () => {
       <FormDivider />
 
       <Grid item xs={0} md={6} sx={{ position: 'relative', height: '100%' }}>
-        <Image
-          src={'/admin/assets/images/food.svg'}
-          fill={true}
-          sizes="100vw"
-          alt="login-image"
-        />
+        <Image src={image} fill={true} sizes="100vw" alt="login-image" />
       </Grid>
     </SecondaryContainer>
   );
