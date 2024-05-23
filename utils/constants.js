@@ -4,6 +4,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
+import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
 
 export const NAV_HEIGHT = 85;
 export const DASHBOARD_DRAWER_FULLWIDTH = 350;
@@ -39,13 +40,18 @@ export const dashboardLinks = [
     icon: <MenuBookIcon />,
   },
   {
-    id: 'logs',
-    text: 'Logs',
-    icon: <WorkHistoryIcon />,
+    id: 'plan',
+    text: 'Plan Details',
+    icon: <SubscriptionsIcon />,
   },
   {
     id: 'payment',
-    text: 'Payments',
+    text: 'Payment Details',
     icon: <MonetizationOnIcon />,
+  },
+  {
+    id: 'logs',
+    text: 'Logs',
+    icon: <WorkHistoryIcon />,
   },
 ];

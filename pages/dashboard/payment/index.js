@@ -1,14 +1,14 @@
 import React from 'react';
-import PaymentPlans from '@/components/dashboard/payment-plans/payment-plans';
+import PaymentHistory from '@/components/dashboard/payment-history/payment-history.js';
 import DashboardLayout from '@/components/layout/dashboard-layout';
 import withAuth from '@/components/auth/with-auth';
 
-const PaymentPage = () => {
-  return <PaymentPlans />;
+const PaymentHistoryPage = () => {
+  return <PaymentHistory />;
 };
 
-PaymentPage.getLayout = (page) => {
+PaymentHistoryPage.getLayout = (page) => {
   return <DashboardLayout>{page}</DashboardLayout>;
 };
 
-export default withAuth(PaymentPage);
+export default withAuth(PaymentHistoryPage);
