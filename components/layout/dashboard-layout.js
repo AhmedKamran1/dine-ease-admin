@@ -6,9 +6,10 @@ import { selectUserState, userActions } from '@/store/user/userSlice';
 
 // Components
 import withAuth from '../auth/with-auth';
+import Logo from '../logo/logo';
 
 //Styles
-import { Avatar, List, ListItem, ListItemIcon } from '@mui/material';
+import { List, ListItem, ListItemIcon } from '@mui/material';
 import {
   DrawerIcon,
   CustomDrawer,
@@ -23,10 +24,10 @@ import {
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 // Utils
 import { dashboardLinks } from '@/utils/constants';
-import { getFileUrl } from '@/helpers';
 
 const DashboardLayout = ({ children }) => {
   const dispatch = useDispatch();
@@ -61,21 +62,17 @@ const DashboardLayout = ({ children }) => {
           sx={{
             gap: 2,
             flexDirection: 'column',
-            mt: 3,
+            mt: 5,
             display: { xs: open ? 'flex' : 'none', md: 'flex' },
           }}
         >
-          <Avatar
-            alt="admin-avatar"
-            src={
-              user.avatar &&
-              getFileUrl(
-                process.env.NEXT_PUBLIC_AWS_S3_USERS_BUCKET,
-                `${user.id}/avatar/${user.avatar}`
-              )
-            }
-            sx={{ height: 120, width: 120 }}
-          />
+          <Logo />
+          <FlexContainer gap={1}>
+            <AdminPanelSettingsIcon color="primary" fontSize="large" />
+            <Text variant="main" color="primary" fontWeight={600}>
+              Admin Portal
+            </Text>
+          </FlexContainer>
           <Text variant="subHeader" fontWeight={500}>
             {user.name}
           </Text>
