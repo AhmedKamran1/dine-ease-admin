@@ -17,10 +17,17 @@ import { getError } from '@/helpers';
 // Icons
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 // Styles
 import { IconButton, InputAdornment } from '@mui/material';
-import { Text, FormButton, InputField, FormContainer } from '@/components/UI';
+import {
+  Text,
+  FormButton,
+  InputField,
+  FormContainer,
+  FlexContainer,
+} from '@/components/UI';
 
 const LoginForm = () => {
   const router = useRouter();
@@ -35,7 +42,7 @@ const LoginForm = () => {
       const { details, token } = response.data;
       dispatch(userActions.login(details));
       localStorage.setItem('token', token);
-      router.push('/dashboard/restaurant-listing', null, { shallow: true });
+      router.push('/dashboard/overview', null, { shallow: true });
     } catch (e) {
       enqueueSnackbar({ variant: 'error', message: getError(e) });
     } finally {
@@ -61,10 +68,12 @@ const LoginForm = () => {
             DineEase
           </Text>
         </Text>
-        <Text variant="main" textAlign={'center'} fontWeight={500} mb={3}>
-          Admin Login
-        </Text>
-
+        <FlexContainer gap={1} mb={2}>
+          <AdminPanelSettingsIcon color="primary" fontSize="large" />
+          <Text variant="main" color="primary" fontWeight={600}>
+            Admin Portal
+          </Text>
+        </FlexContainer>
         <InputField
           name="email"
           label="Email"

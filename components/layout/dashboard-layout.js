@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,6 +38,10 @@ const DashboardLayout = ({ children }) => {
   const value = router.asPath.split('/');
   const [selectedPage, setSelectedPage] = useState(value[value.length - 1]);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setSelectedPage(value[value.length - 1]);
+  }, [router]);
 
   const handleLogout = () => {
     dispatch(userActions.logout());

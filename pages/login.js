@@ -8,7 +8,7 @@ const LoginPage = () => {
   const token = localStorage.getItem('token');
 
   if (token) {
-    router.push('/dashboard/restaurant-listing');
+    router.push('/dashboard/overview');
     return;
   }
 
