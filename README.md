@@ -1,40 +1,30 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# DineEase
 
-## Getting Started
+## Overview
 
-First, run the development server:
+The admin portal for the DineEase platform allows administrators to perform several key functions. Administrators can view platform analytics, approve or reject restaurant listing and modification requests. Manage featured plans available for purchase, and access all payment analytics for the platform.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Platform Analytics
+- Restaurant Details Management
+- Management of Featured Plans
+- Payment Analytics
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Technologies
+- Next.js 13 Page Router
+- Material UI Styled Components
+- Redux Toolkit
+- Chart.js
+- AWS S3
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## User Interface
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Login 
+![image](https://github.com/FYP-DineEase/dine-ease-admin/assets/73246016/ee9f0cee-943a-4449-8a4d-2b1bebfcd93a)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Admin Dashboard
+![image](https://github.com/FYP-DineEase/dine-ease-admin/assets/73246016/ddf862b9-b789-4171-9c32-296d137b5cc9)![image](https://github.com/FYP-DineEase/dine-ease-admin/assets/73246016/21d0bcad-a292-4d48-bd38-533f2893fc14)![image](https://github.com/FYP-DineEase/dine-ease-admin/assets/73246016/d38fe17f-6343-4a13-a40d-543f46cb8428)![image](https://github.com/FYP-DineEase/dine-ease-admin/assets/73246016/a8f9772d-2e43-4df6-855a-87d96c37c4ba)![image](https://github.com/FYP-DineEase/dine-ease-admin/assets/73246016/45004575-4480-4842-886b-30d75301a648)![image](https://github.com/FYP-DineEase/dine-ease-admin/assets/73246016/1824aca7-90b8-4f91-9a66-24aebce4d2b9)
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
